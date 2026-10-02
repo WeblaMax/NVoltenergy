@@ -9,6 +9,9 @@
   var flashEl = ov.querySelector('.flash'), floor = ov.querySelector('.floor');
   var tint = ov.querySelector('.tint'), bg = ov.querySelector('.bg');
   var W, H, DPR, R, T, calm = root.classList.contains('intro-calm');
+  /* pe telefoane: DPR mai mic și mai puține particule, ca să ruleze fluid */
+  var lite = (window.matchMedia && matchMedia('(pointer:coarse)').matches) || innerWidth < 760;
+  var pf = lite ? 0.55 : 1;
 
   /* ---- coin geometry ---- */
   var MARK = '<g id="mk"><path d="M36 176V52h30l60 76V52h30v124h-30L66 100v76z"/><path d="M146 6 112 74h22l-24 54 56-72h-24l26-50z"/></g>';
@@ -59,7 +62,7 @@
   var sheens;
 
   function resize() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    DPR = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
     W = innerWidth; H = innerHeight;
     R = Math.max(56, Math.min(118, W * .2, H * .2));
     cv.width = W * DPR; cv.height = H * DPR;
@@ -98,8 +101,8 @@
     }
   }
   function impact(power) {
-    burst(0, R, Math.round(34 * power), R * 6.5 * power, 1.7);
-    for (var i = 0; i < 3 + Math.round(3 * power); i++) {
+    burst(0, R, Math.round(34 * power * pf), R * 6.5 * power, 1.7);
+    for (var i = 0; i < Math.max(2, Math.round((3 + 3 * power) * pf)); i++) {
       var a = -Math.PI / 2 + rnd(-1.35, 1.35), L = R * rnd(.45, 1.05) * power;
       bolts.push(mkBolt(0, R, Math.cos(a) * L, R + Math.sin(a) * L, .55, 1.3, rnd(90, 170), true));
     }
@@ -107,7 +110,7 @@
     shakeT = now; shakeA = calm ? 0 : 9 * power;
   }
   function arcs(c) {
-    var n = 2 + Math.floor(c * 5);
+    var n = Math.max(1, Math.round((2 + c * 5) * pf));
     for (var i = 0; i < n; i++) {
       var a = rnd(0, Math.PI * 2), r1 = R * rnd(.55, .98), x1 = Math.cos(a) * r1, y1 = Math.sin(a) * r1, x2, y2, r2;
       if (Math.random() < .5) { var a2 = a + rnd(.5, 1.4) * (Math.random() < .5 ? 1 : -1); r2 = R * rnd(.5, .95); x2 = Math.cos(a2) * r2; y2 = Math.sin(a2) * r2; }
@@ -118,12 +121,12 @@
     if (c > .35 && Math.random() < .5) burst(rnd(-R, R) * .8, rnd(-R, R) * .8, 3, R * 2, 2);
   }
   function flashBurst() {
-    var L = Math.max(W, H) * .5;
-    for (var i = 0; i < 16; i++) {
-      var a = (i / 16) * Math.PI * 2 + rnd(-.15, .15);
+    var L = Math.max(W, H) * .5, nb = lite ? 12 : 16;
+    for (var i = 0; i < nb; i++) {
+      var a = (i / nb) * Math.PI * 2 + rnd(-.15, .15);
       bolts.push(mkBolt(Math.cos(a) * R * .55, Math.sin(a) * R * .55, Math.cos(a) * L * rnd(.45, 1), Math.sin(a) * L * rnd(.45, 1), .5, 2.1, rnd(160, 300), true));
     }
-    for (var j = 0; j < 70; j++) {
+    for (var j = 0; j < Math.round(70 * pf); j++) {
       var b = Math.random() * Math.PI * 2, v = R * rnd(3, 9);
       sparks.push({ x: Math.cos(b) * R * .7, y: Math.sin(b) * R * .7, vx: Math.cos(b) * v, vy: Math.sin(b) * v, age: 0, life: rnd(500, 1200), w: rnd(1, 2.6) });
     }
@@ -150,7 +153,7 @@
   /* ---- timeline (ms) ---- */
   var T1 = 1250, B1 = 560, B2 = 260, T2 = T1 + B1, T3 = T2 + B2, CH0 = 2250, FL = 3850, FLY0 = 4150, FLY1 = 4850, END = 5100;
   var now = 0, t0 = 0, shakeT = -1e4, shakeA = 0, last = 0, nextArc = 0, ev = {}, done = false;
-  var y0 = -(innerHeight / 2 + R * 2), tgt = null;
+  var y0 = -(innerHeight / 2 + R * 2), tgt = null, noTarget = false;
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   function ease(u) { return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
 
@@ -184,8 +187,12 @@
     var p = pose(now), c = clamp((now - CH0) / (FL - CH0), 0, 1), flyU = clamp((now - FLY0) / (FLY1 - FLY0), 0, 1), fu = ease(flyU);
     var tx = 0, ty = 0, sc = 1, ryF = 0;
     if (flyU > 0) {
-      if (!tgt) { var r = document.getElementById('brandMark').getBoundingClientRect(); tgt = { x: r.left + r.width / 2 - W / 2, y: r.top + r.height / 2 - H / 2, s: r.width / (2 * R) }; }
-      tx = tgt.x * fu; ty = tgt.y * fu; sc = 1 + (tgt.s - 1) * fu; ryF = 360 * fu;
+      if (!tgt && !noTarget) {               /* protecție: dacă #brandMark lipsește sau e ascuns, nu dăm eroare */
+        var bm = document.getElementById('brandMark'), r = bm && bm.getBoundingClientRect();
+        if (r && r.width > 1 && r.height > 1) tgt = { x: r.left + r.width / 2 - W / 2, y: r.top + r.height / 2 - H / 2, s: r.width / (2 * R) };
+        else noTarget = true;                /* fără țintă → moneda doar se estompează pe loc */
+      }
+      if (tgt) { tx = tgt.x * fu; ty = tgt.y * fu; sc = 1 + (tgt.s - 1) * fu; ryF = 360 * fu; }
     }
     coin.style.transform = 'translate3d(' + tx + 'px,' + (p.y + ty) + 'px,0) scale(' + sc + ') rotateX(' + p.rx + 'deg) rotateY(' + (p.ry + ryF) + 'deg) rotateZ(' + p.rz + 'deg)';
     var sx = 50 - (p.ry + ryF) * 1.6 + Math.sin(p.rx * Math.PI / 180) * 30 + (c > 0 ? (Math.random() - .5) * 40 * c : 0);

@@ -143,3 +143,73 @@ footer a{display:block;padding:3px 0;color:#b5c3e8}footer a:hover{color:#fff}
 }
 @media(max-width:600px){.g4,.g3,.g2{grid-template-columns:1fr}.row{grid-template-columns:1fr;gap:4px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* ============================================================
+   v4 — logo wordmark · fundal ambiental · efecte la apăsare
+   ============================================================ */
+
+/* fără evidențierea gri implicită la tap pe mobil */
+*{-webkit-tap-highlight-color:transparent}
+a,button,summary,.row,.chip,.card{-webkit-tap-highlight-color:transparent}
+
+/* ---- LOGO: wordmark tipografic + simbol plat ---- */
+.brand{display:flex;align-items:center;gap:11px;font:inherit;letter-spacing:normal}
+.brand img{display:none}
+.brand-mark{width:34px;height:34px;flex:none;display:grid;place-items:center;filter:drop-shadow(0 2px 7px rgba(30,107,255,.35))}
+.brand-mark svg{width:100%;height:100%}
+.brand-word{font-family:"Space Grotesk","Sora",system-ui,sans-serif;font-weight:700;font-size:1.24rem;line-height:1;letter-spacing:-.02em;color:var(--ink)}
+.brand-word em{font-style:normal;color:var(--blue)}
+.brand-word small{display:block;font:600 .56rem var(--body);letter-spacing:.32em;color:var(--muted);margin-top:4px}
+.brand--light .brand-word{color:#fff}
+.brand--light .brand-word em{color:#8fdcff}
+.brand--light .brand-word small{color:#9fb0d6}
+
+/* ---- FUNDAL AMBIENTAL (sub tot conținutul) ---- */
+.ambient{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict}
+.amb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;will-change:transform}
+.amb-b1{width:620px;height:620px;background:radial-gradient(circle,#1E6BFF 0,#1E6BFF00 70%);top:-220px;right:-140px;animation:ambFloat 15s ease-in-out infinite alternate}
+.amb-b2{width:520px;height:520px;background:radial-gradient(circle,#00B4FF 0,#00B4FF00 70%);top:38%;left:-180px;opacity:.4;animation:ambFloat 19s ease-in-out infinite alternate -4s}
+.amb-b3{width:480px;height:480px;background:radial-gradient(circle,#1E6BFF 0,#1E6BFF00 70%);bottom:-200px;right:8%;opacity:.35;animation:ambFloat 22s ease-in-out infinite alternate -8s}
+.amb-b4{width:360px;height:360px;background:radial-gradient(circle,#00B4FF 0,#00B4FF00 72%);top:12%;left:40%;opacity:.28;animation:ambFloat 17s ease-in-out infinite alternate -6s}
+@keyframes ambFloat{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(40px,38px,0) scale(1.14)}}
+
+/* scântei galben neon, în formă de fulger, foarte discrete */
+.spark{position:absolute;width:40px;height:150px;opacity:.16;filter:drop-shadow(0 0 7px #FFD40099);
+  background:linear-gradient(180deg,#FFE680,#FFD400);
+  clip-path:polygon(52% 0,16% 56%,46% 56%,30% 100%,88% 40%,54% 40%,78% 0);
+  animation:sparkFlick 9s steps(1,end) infinite}
+.spark-1{top:20%;left:14%;transform:rotate(12deg) scale(.9)}
+.spark-2{top:58%;right:16%;transform:rotate(-18deg) scale(1.1);animation-delay:-3s;animation-duration:11s}
+.spark-3{top:80%;left:30%;transform:rotate(24deg) scale(.7);animation-delay:-6s;animation-duration:13s}
+@keyframes sparkFlick{
+  0%,100%{opacity:.05}
+  3%{opacity:.22}5%{opacity:.08}7%{opacity:.2}
+  40%{opacity:.14}42%{opacity:.04}44%{opacity:.18}
+  70%{opacity:.1}
+}
+
+/* mobil: mai puține efecte, mai ușoare */
+@media(max-width:720px){
+  .amb{filter:blur(64px)}
+  .amb-b4,.spark-3{display:none}
+  .amb-b1{width:420px;height:420px}.amb-b2{width:360px;height:360px}.amb-b3{width:340px;height:340px}
+  .spark{height:110px;opacity:.12}
+}
+@media(prefers-reduced-motion:reduce){.amb,.spark{animation:none!important}}
+
+/* ---- EFECTE LA APĂSARE (doar la click/tap, nu permanent) ---- */
+.btn,.cta,.chip,.row,.card,.contact-list a,nav a,.btn-ghost{transition:transform .18s ease,box-shadow .3s ease,border-color .3s ease}
+.btn:active,.cta:active,.chip:active,.row:active,.card:active,.contact-list a:active{transform:scale(.97)}
+
+.press-gold{animation:pressGold .5s ease-out}
+.press-blue{animation:pressBlue .5s ease-out}
+@keyframes pressGold{
+  0%{box-shadow:0 0 0 2px #FFD40000,0 0 0 0 #FFC93C00}
+  18%{box-shadow:0 0 0 2px #FFD400cc,0 0 26px 4px #FFC93Cdd;transform:scale(.97)}
+  100%{box-shadow:0 0 0 0 #FFD40000,0 0 0 0 #FFC93C00;transform:scale(1)}
+}
+@keyframes pressBlue{
+  0%{box-shadow:0 0 0 2px #00B4FF00,0 0 0 0 #00B4FF00}
+  18%{box-shadow:0 0 0 2px #00B4FFcc,0 0 24px 3px #00B4FFcc;transform:scale(.97)}
+  100%{box-shadow:0 0 0 0 #00B4FF00,0 0 0 0 #00B4FF00;transform:scale(1)}
+}
