@@ -8,15 +8,15 @@
 #intro .bg::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#1f5bff2e 1.2px,transparent 1.4px);background-size:30px 30px;-webkit-mask:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent);mask:radial-gradient(ellipse 70% 60% at 50% 50%,#000,transparent)}
 #intro .floor{position:absolute;left:0;right:0;height:60vh;background:linear-gradient(180deg,#ffffffd0,#ffffff00 70%);border-top:1px solid #a9bde8}
 #intro .tint{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#0a1c5000 0,#0a1c50 120%);opacity:0;pointer-events:none}
-#intro .stage{position:absolute;inset:0;perspective:1100px}
+#intro .stage{position:absolute;inset:0;perspective:1100px;-webkit-perspective:1100px}
 #intro .shadow{position:absolute;left:50%;top:50%;border-radius:50%;background:radial-gradient(ellipse,#0a1e5a66 0,#0a1e5a00 70%);transform-origin:center}
 #intro .glow{position:absolute;left:50%;top:50%;border-radius:50%;background:radial-gradient(circle,#2f7bffcc 0,#2f7bff55 35%,#2f7bff00 68%);opacity:0;pointer-events:none}
-#intro .coin{position:absolute;left:50%;top:50%;transform-style:preserve-3d;will-change:transform}
+#intro .coin{position:absolute;left:50%;top:50%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d}
 #intro .face,#intro .edge{position:absolute;inset:0;border-radius:50%}
-#intro .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+#intro .face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
 #intro .face svg{width:100%;height:100%;display:block}
 #intro .edge{background:linear-gradient(135deg,#c3cddd,#68778f 55%,#a4b0c4)}
-#intro .sheen{position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 38%,#ffffffd9 50%,transparent 62%);background-size:300% 100%;background-position:var(--sx,50%) 0;mix-blend-mode:soft-light;opacity:.95}
+#intro .sheen{position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 38%,#ffffffd9 50%,transparent 62%);background-size:300% 100%;background-position:var(--sx,50%) 0;opacity:.55}
 #intro canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #intro .flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#fff 0,#cfe3ff 30%,#9cc4ff00 70%);opacity:0;pointer-events:none}
 #intro .skip{position:absolute;right:20px;bottom:20px;font:500 .82rem Inter,system-ui,sans-serif;color:#33426a;background:#ffffffcc;border:1px solid #c8d6f3;border-radius:99px;padding:8px 16px;cursor:pointer;backdrop-filter:blur(6px)}
