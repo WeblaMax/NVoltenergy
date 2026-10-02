@@ -65,7 +65,8 @@
     cv.width = W * DPR; cv.height = H * DPR;
     buildCoin();
   }
-  resize(); addEventListener('resize', resize);
+  resize(); var lastW = innerWidth;
+  addEventListener('resize', function () { if (innerWidth !== lastW) { lastW = innerWidth; resize(); } }); /* bara de adrese a telefonului schimbă doar înălțimea */
 
   /* ---- fx ---- */
   var sparks = [], bolts = [], ripples = [];
