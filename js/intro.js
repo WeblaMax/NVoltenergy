@@ -8,7 +8,7 @@
   var shadow = ov.querySelector('.shadow'), glow = ov.querySelector('.glow');
   var flashEl = ov.querySelector('.flash'), floor = ov.querySelector('.floor');
   var tint = ov.querySelector('.tint'), bg = ov.querySelector('.bg');
-  var W, H, DPR, R, T;
+  var W, H, DPR, R, T, calm = root.classList.contains('intro-calm');
 
   /* ---- coin geometry ---- */
   var MARK = '<g id="mk"><path d="M36 176V52h30l60 76V52h30v124h-30L66 100v76z"/><path d="M146 6 112 74h22l-24 54 56-72h-24l26-50z"/></g>';
@@ -103,7 +103,7 @@
       bolts.push(mkBolt(0, R, Math.cos(a) * L, R + Math.sin(a) * L, .55, 1.3, rnd(90, 170), true));
     }
     ripples.push({ t: now, p: power });
-    shakeT = now; shakeA = 9 * power;
+    shakeT = now; shakeA = calm ? 0 : 9 * power;
   }
   function arcs(c) {
     var n = 2 + Math.floor(c * 5);
@@ -127,7 +127,7 @@
       sparks.push({ x: Math.cos(b) * R * .7, y: Math.sin(b) * R * .7, vx: Math.cos(b) * v, vy: Math.sin(b) * v, age: 0, life: rnd(500, 1200), w: rnd(1, 2.6) });
     }
     ripples.push({ t: now, p: 2.4 });
-    shakeT = now; shakeA = 14;
+    shakeT = now; shakeA = calm ? 0 : 14;
   }
 
   function strokeP(pts, w, col, al, blur) {
@@ -197,7 +197,7 @@
     glow.style.opacity = gl;
     glow.style.transform = 'translateY(' + (p.y + ty * .0) + 'px) scale(' + (1 + c * .15) + ')';
     tint.style.opacity = (c * .32) * (now > FL ? Math.max(0, 1 - (now - FL) / 300) : 1);
-    flashEl.style.opacity = now > FL ? Math.max(0, 1 - (now - FL) / 420) * .95 : 0;
+    flashEl.style.opacity = now > FL ? Math.max(0, 1 - (now - FL) / 420) * (calm ? .3 : .95) : 0;
     bg.style.opacity = now > 4300 ? 1 - clamp((now - 4300) / 650, 0, 1) : 1;
     floor.style.opacity = bg.style.opacity;
     coin.style.opacity = now > FLY1 - 180 ? 1 - clamp((now - (FLY1 - 180)) / 180, 0, 1) : 1;
@@ -235,7 +235,7 @@
 
   function finish(fast) {
     if (done) return; done = true;
-    var end = function () { root.classList.remove('intro-on', 'intro-land'); ov.remove(); };
+    var end = function () { root.classList.remove('intro-on', 'intro-land', 'intro-calm'); ov.remove(); };
     root.classList.add('intro-land');
     if (fast) { ov.classList.add('out'); setTimeout(end, 450); } else end();
   }
