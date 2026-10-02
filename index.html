@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/intro.css">
-<script>(function(){try{var n=performance.getEntriesByType("navigation")[0],internal=document.referrer&&document.referrer.indexOf(location.origin)===0&&(!n||n.type!=="reload"),rm=matchMedia("(prefers-reduced-motion: reduce)").matches;if(!internal&&!rm){document.documentElement.classList.add("intro-on");setTimeout(function(){document.documentElement.classList.remove("intro-on")},12000)}}catch(e){}})()</script>
+<script>(function(){try{var n=performance.getEntriesByType("navigation")[0],internal=document.referrer&&document.referrer.indexOf(location.origin)===0&&(!n||n.type!=="reload"),rm=matchMedia("(prefers-reduced-motion: reduce)").matches;if(!internal){document.documentElement.classList.add("intro-on");if(rm)document.documentElement.classList.add("intro-calm");setTimeout(function(){document.documentElement.classList.remove("intro-on")},12000)}}catch(e){}})()</script>
 </head>
 <body class="">
 <header class="site-header"><div class="wrap bar">
